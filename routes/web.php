@@ -4,6 +4,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\reportController;
+use App\Http\Controllers\SslCommerzPaymentController;
+use App\Http\Controllers\summayController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\TokenVerifyMiddleware;
@@ -25,6 +28,8 @@ use App\Http\Middleware\TokenVerifyMiddleware;
 Route::get('login',[UserController::class,'login'])->name('login');
 Route::get('registration',[UserController::class,'register'])->name('registration');
 Route::get('/dashboard',[UserController::class,'dashboard'])->name('dashboard')
+    ->middleware(TokenVerifyMiddleware::class);
+Route::get('/',[UserController::class,'dashboard'])->name('dashboard')
     ->middleware(TokenVerifyMiddleware::class);
 Route::get('/dashboard/profile',[UserController::class,'userProfile'])->name('profile')
     ->middleware(TokenVerifyMiddleware::class);
@@ -114,4 +119,29 @@ Route::get('invoice-list',[InvoiceController::class,'selectInvoice'])
 Route::post('show-invoice',[InvoiceController::class,'showInvoice'])
     ->middleware(TokenVerifyMiddleware::class);
 
+// Summery Routes
+
+Route::get('summary',[summayController::class,'summary'])
+    ->middleware(TokenVerifyMiddleware::class);
+Route::get('reportPage',[reportController::class,'salesReportPage'])
+    ->middleware(TokenVerifyMiddleware::class);
+Route::get('sales-report/{FormDate}/{ToDate}',[reportController::class,'salesReport'])
+    ->middleware(TokenVerifyMiddleware::class);
+
+
+
+
+// SSLCOMMERZ Start
+Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
+
+Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
+Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+//SSLCOMMERZ END
 
